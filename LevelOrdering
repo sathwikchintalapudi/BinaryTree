@@ -1,0 +1,70 @@
+import java.io.*;
+import java.util.*;
+
+class Solution {
+  public static void main(String[] args) {
+    Solution sol = new Solution();
+    Node rootData = sol.formData();
+    List<Node> output = new ArrayList<>();
+        
+    output.add(rootData);
+    int index = 0;
+    
+    while(index < output.size()) {
+      Node currentNode = output.get(index);
+      if(currentNode.getLeftNode() != null) {
+        output.add(currentNode.getLeftNode());
+      }
+      if(currentNode.getRightNode() != null) {
+        output.add(currentNode.getRightNode());
+      }
+      index++;
+    }
+    
+    for(int i = 0; i < output.size(); i++) {
+     System.out.println(output.get(i).data); 
+    }
+  }
+  
+  
+  private Node formData() {
+    
+    Node three = new Node(3, null, null);
+    Node four = new Node(4, null, null);
+    Node two = new Node(2, three, four);
+    Node seven = new Node(7, null, null);
+    Node six = new Node(6, seven, null);
+    Node five = new Node(5, six, null);
+    Node rootNode = new Node(1, two, five);
+    
+    return rootNode;
+  }   
+  
+  private class Node {
+   
+    private int data;
+    
+    private Node left;
+    
+    private Node right;
+    
+    public Node(int data, Node left, Node right) {
+      this.data = data;
+      this.left = left;
+      this.right = right;
+    }
+    
+    public int getData() {
+     return this.data; 
+    }
+    
+    public Node getLeftNode() {
+     return this.left; 
+    }
+    
+    public Node getRightNode() {
+     return this.right; 
+    }
+    
+  }
+}
