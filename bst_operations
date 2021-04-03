@@ -13,13 +13,34 @@ public class BinaryTree {
 //        binaryTree.postOrderTraversal(root);
 //        binaryTree.inOrderTraversal(root);
 //        binaryTree.levelOrderTraversal(root);
-//        binaryTree.diameterOfTree(root);
+        binaryTree.diameterOfTree(root);
+        boolean isBalanced = binaryTree.isBalanced(root).isBalanced;
+        System.out.println(isBalanced);
     }
+
+
+    private BalancedPair isBalanced(Node root) {
+        if (root == null) {
+            return new BalancedPair(-1, true);
+        }
+        BalancedPair leftBalancePair = isBalanced(root.left);
+        BalancedPair rightBalancePair = isBalanced(root.right);
+        if (leftBalancePair.isBalanced && rightBalancePair.isBalanced) {
+            return new BalancedPair(Math.max(leftBalancePair.height, rightBalancePair.height) + 1, Math.abs(leftBalancePair.height - rightBalancePair.height) <= 1);
+        }
+        else {
+            return new BalancedPair(Math.max(leftBalancePair.height, rightBalancePair.height) + 1, false);
+        }
+    }
+
 
     private void diameterOfTree(Node root) {
         int leftHeight = heightOfTree(root.left);
         int rightHeight = heightOfTree(root.right);
-        System.out.println(leftHeight + rightHeight + 1);
+        System.out.println("lh : " + leftHeight);
+        System.out.println("rh : " + rightHeight);
+
+        System.out.println("Diameter : " + leftHeight + rightHeight + 1);
     }
 
     private int heightOfTree(Node root) {
@@ -80,9 +101,12 @@ public class BinaryTree {
         Node leaf1 = new Node(10, null, null);
         Node leaf2 = new Node(11, null, null);
         Node leaf3 = new Node(12, null, null);
-       // Node leaf5 = new Node(13, null, null);
 
-        Node leaf4 = new Node(13, null, null);
+        Node leaf411 = new Node(14, null, null);
+        Node leaf41 = new Node(14, leaf411, null);
+
+        Node leaf4 = new Node(13, leaf41, null);
+
 
         Node c1 = new Node(9, leaf1, leaf2);
         Node c2 = new Node(8, leaf3, leaf4);
@@ -102,6 +126,16 @@ public class BinaryTree {
             this.data = data;
             this.left = left;
             this.right = right;
+        }
+    }
+
+    class BalancedPair {
+        int height;
+        boolean isBalanced;
+
+        BalancedPair(int height, boolean isBalanced) {
+            this.height = height;
+            this.isBalanced = isBalanced;
         }
     }
 }
