@@ -1,6 +1,8 @@
 package com.example.demo;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class BinaryTree {
@@ -11,11 +13,132 @@ public class BinaryTree {
         Node root = binaryTree.construct();
 //        binaryTree.preOrderTraversal(root);
 //        binaryTree.postOrderTraversal(root);
-//        binaryTree.inOrderTraversal(root);
+        //      binaryTree.inOrderTraversal(root);
 //        binaryTree.levelOrderTraversal(root);
-        binaryTree.diameterOfTree(root);
-        boolean isBalanced = binaryTree.isBalanced(root).isBalanced;
-        System.out.println(isBalanced);
+//        binaryTree.diameterOfTree(root);
+//        boolean isBalanced = binaryTree.isBalanced(root).isBalanced;
+//        System.out.println(isBalanced);
+//        System.out.println(binaryTree.findPath(root)); // preorder traversal
+        //       System.out.println(binaryTree.nmberOfNodes(root));
+        //       System.out.println(binaryTree.numberOfLeafNodes(root));
+        binaryTree.givenLevel(root, 4, 0);
+        binaryTree.printLevelOrderRecursion(root);
+
+        // Finding a path to given element using preOrder Traversal
+//        List<Integer> path = new ArrayList<>();
+//        binaryTree.getPath(root, path, 15); // preorder traversal
+//        System.out.println(path);
+
+        // Common ancestor - using inorder traversal
+//        Node cmNode = null;
+//        binaryTree.commonAncestor(root, 12, 13, cmNode);
+//        System.out.println(cmNode == null ? -1 : cmNode.data);
+
+
+        //   System.out.println(binaryTree.findPath2(root, 12, 15));
+    }
+
+    
+
+    private void givenLevel(Node root, int level, int currentLevel) {
+        if (root == null) {
+            return;
+        }
+        else if (level == 0) {
+            System.out.println(root.data);
+        }
+        else if (level == currentLevel) {
+            System.out.println(root.data);
+        }
+        givenLevel(root.left, level, currentLevel + 1);
+        givenLevel(root.right, level, currentLevel + 1);
+    }
+
+    private int numberOfLeafNodes(Node root) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.left == null && root.right == null) {
+            return 1;
+        }
+        return numberOfLeafNodes(root.left) + numberOfLeafNodes(root.right);
+    }
+
+    private int nmberOfNodes(Node root) {
+        if (root == null) {
+            return 0;
+        }
+        return 1 + nmberOfNodes(root.right) + nmberOfNodes(root.left);
+    }
+
+    private boolean commonAncestor(Node root, int element1, int element2, Node cmNode) {
+        if (root == null || cmNode != null) {
+            return false;
+        }
+        if (root.data == element1 || root.data == element2) {
+            return true;
+        }
+
+        int leftPresence = commonAncestor(root.left, element1, element2, cmNode) ? 1 : 0;
+        int rightPresence = commonAncestor(root.right, element1, element2, cmNode) ? 1 : 0;
+        int isRootMatched = (root.data == element1 || root.data == element2) ? 1 : 0;
+
+        if (leftPresence + rightPresence + isRootMatched >= 2) {
+            cmNode = root;
+        }
+        return (leftPresence + rightPresence + isRootMatched > 0);
+    }
+
+    private boolean findPath2(Node root, int ele1, int ele2) {
+
+
+        boolean rightPresence = findPath2(root.right, ele1, ele2);
+        boolean leftPresence = findPath2(root.left, ele1, ele2);
+
+
+        return false;
+    }
+
+    private int findPath(Node root) {
+        List<Integer> path = new ArrayList<>();
+        int element = 15;
+
+        List<Integer> path2 = new ArrayList<>();
+        int element2 = 12;
+
+        getPath(root, path, element);
+        getPath(root, path2, element2);
+        for (int i = 0; i < path.size() && i < path2.size(); i++) {
+            if (path.get(i) != path2.get(i)) {
+                return path.get(i - 1);
+            }
+        }
+        return -1;
+    }
+
+    private void getPath(Node root, List<Integer> path, int element) {
+        if (root == null) {
+            return;
+        }
+        path.add(root.data);
+        if (!isPresent(path, element)) {
+            getPath(root.left, path, element);
+        }
+        if (!isPresent(path, element)) {
+            getPath(root.right, path, element);
+        }
+        if (!isPresent(path, element)) {
+            path.remove(path.size() - 1);
+        }
+    }
+
+    private boolean isPresent(List<Integer> path, int element) {
+        for (Integer p : path) {
+            if (p == element) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -102,7 +225,7 @@ public class BinaryTree {
         Node leaf2 = new Node(11, null, null);
         Node leaf3 = new Node(12, null, null);
 
-        Node leaf411 = new Node(14, null, null);
+        Node leaf411 = new Node(15, null, null);
         Node leaf41 = new Node(14, leaf411, null);
 
         Node leaf4 = new Node(13, leaf41, null);
