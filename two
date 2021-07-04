@@ -1,0 +1,859 @@
+package com.example.demo;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+import java.util.Stack;
+import java.util.TreeMap;
+
+public class BinaryTree {
+
+    List<Integer> visitedNodes = new ArrayList<>();
+    List<Integer> visitedNodes1 = new ArrayList<>();
+    int maxVisitedLevel = 1;
+    Map<Integer, List<Integer>> reference = new TreeMap<>();
+
+    public static void main(String[] args) {
+
+        // 33, 37
+
+        Double.valueOf(0d).equals(null);
+
+        BinaryTree binaryTree = new BinaryTree();
+        Node root = binaryTree.construct();
+
+
+        System.out.println("Sum of data nodes : " + binaryTree.sumOfNodes(root));
+        System.out.println("Difference b/w odd level and even level : " + binaryTree.differenceBetweenOddLevelAndEvenLevel(root));
+        System.out.println("Number of nodes : " + binaryTree.numberOfNodes(root));
+
+        System.out.print("preOrder traversal :");
+        binaryTree.preOrderTraversal(root);
+        System.out.println();
+
+        System.out.print("postOrder traversal :");
+        binaryTree.postOrderTraversal(root);
+        System.out.println();
+
+        System.out.print("inorderOrder traversal :");
+        binaryTree.inOrderTraversal(root);
+        System.out.println();
+
+        System.out.print("level orderOrder traversal :");
+        binaryTree.levelOrderTraversal(root);
+        System.out.println();
+
+        System.out.println("Number of leaf nodes in binary tree : " + binaryTree.numberOfLeafNodes(root));
+
+        System.out.print("Diameter of the tree : ");
+        binaryTree.diameterOfTree(root);
+        System.out.println();
+
+        System.out.print("Height of the tree : " + binaryTree.heightOfTree1(root));
+        System.out.println();
+
+        System.out.print("Height of the left-tree : " + binaryTree.heightOfTree1(root.left));
+        System.out.println();
+
+        System.out.print("Height of the right-tree : " + binaryTree.heightOfTree1(root.right));
+        System.out.println();
+
+        System.out.print("Print elements in given level : ");
+        binaryTree.elementsAtGivenLevel(root, 3);
+        System.out.println();
+
+        System.out.println("Print elements level by level - start");
+        binaryTree.levelOrderTraversalRecursion(root);
+        System.out.println("Print elements level by level - end");
+
+        System.out.print("Level order traversal using recursion : ");
+        binaryTree.levelOrderTraversalQueue(root);
+
+        System.out.println();
+        System.out.print("Left view of the binary tree :");
+        binaryTree.leftView(root);
+
+        System.out.println();
+        System.out.print("Right view of the binary tree :");
+        binaryTree.rightView(root);
+
+        System.out.println();
+        System.out.print("Print preorder of the binary tree with out recursion :");
+        binaryTree.inOrderTraversalWithOutRecursion(root);
+
+//        System.out.println();
+//        System.out.print("Print mirror image of the tree :");
+//        binaryTree.levelOrderTraversalRecursion(root);
+//        binaryTree.mirrorImageOfGivenBinaryTree(root);
+//        System.out.println("Mirror image of the tree :");
+//        binaryTree.levelOrderTraversalRecursion(root);
+
+        System.out.println();
+        binaryTree.identicalBinaryTees(root, root);
+
+        System.out.println();
+        binaryTree.topView(root, 0);
+
+        System.out.println();
+        binaryTree.boundaryView(root);
+
+        System.out.println();
+        binaryTree.verticalOrderPrint(root);
+
+        System.out.println();
+        binaryTree.levelOrderSum(root);
+
+        System.out.println();
+        binaryTree.printSpiral(root);
+
+        System.out.println();
+        Node rootImage = binaryTree.constructImage();
+        System.out.println("Are trees mirror images : " + binaryTree.mirrorImageOfGivenBinaryTreeProve(root, rootImage));
+
+        System.out.println();
+        rootImage.data = 15;
+        System.out.println("Are trees mirror structures : " + binaryTree.mirrorStructureOfGivenBinaryTreeProve(root, rootImage));
+
+        Integer level = binaryTree.getLevel(root, 7, 1, null);
+        System.out.println("Level of the given value is :" + level == null ? "No result" : level);
+
+        Integer width = binaryTree.widthAtGivenLevel_Iteration(root, 3);
+        System.out.println("number of elements at a given level-iteration : " + width);
+
+        List<Integer> result1 = new ArrayList<>();
+        binaryTree.widthAtGivenLevel_Recurssion_one(root, 3, result1);
+        System.out.println("number of elements at a given level-recurssion : " + result1.size());
+
+        binaryTree.widthAtGivenLevel_Recurssion_two(root, 3);
+        System.out.println("number of elements at a given level-recurssion : " + result1.size());
+    }
+
+    private int widthAtGivenLevel_Recurssion_two(Node root, int level) {
+
+        if(root == null) {
+            return 0;
+        }
+
+        if (level == 1) {
+            return 1;
+        }
+        return widthAtGivenLevel_Recurssion_two(root.left, level - 1) + widthAtGivenLevel_Recurssion_two(root.right, level - 1);
+    }
+
+    private void widthAtGivenLevel_Recurssion_one(Node root, int level, List<Integer> result1) {
+        if (level == 1) {
+            result1.add(root.data);
+        }
+        if (root.left != null) {
+            widthAtGivenLevel_Recurssion_one(root.left, level - 1, result1);
+        }
+        if (root.right != null) {
+            widthAtGivenLevel_Recurssion_one(root.right, level - 1, result1);
+        }
+    }
+
+
+    private Integer widthAtGivenLevel_Iteration(Node root, int level) {
+        Queue<Pair> queue = new LinkedList<>();
+        queue.add(new Pair(1, root));
+        int result = 0;
+        while (!queue.isEmpty()) {
+            Pair p = queue.poll();
+            if (p.index == level) {
+                result++;
+            }
+            else {
+                if (p.node.left != null) {
+                    queue.add(new Pair(p.index + 1, p.node.left));
+                }
+                if (p.node.right != null) {
+                    queue.add(new Pair(p.index + 1, p.node.right));
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean mirrorStructureOfGivenBinaryTreeProve(Node leftRoot, Node rightRoot) {
+        if ((leftRoot == null && rightRoot != null) || (leftRoot != null && rightRoot == null)) {
+            return false;
+        }
+
+        else if ((leftRoot == null && rightRoot == null)) {
+            return true;
+        }
+
+        return mirrorImageOfGivenBinaryTreeProve(leftRoot.left, rightRoot.right) && mirrorImageOfGivenBinaryTreeProve(leftRoot.right, rightRoot.left);
+    }
+
+    private void printSpiral(Node root) {
+        Stack<Node> stackLeft = new Stack<>();
+        Stack<Node> stackRight = new Stack<>();
+        List<Integer> result = new ArrayList<>();
+
+        stackLeft.push(root);
+
+        while (!stackLeft.isEmpty() || !stackRight.isEmpty()) {
+            if (!stackLeft.isEmpty()) {
+                while (!stackLeft.isEmpty()) {
+                    Node n1 = stackLeft.pop();
+                    result.add(n1.data);
+                    if (n1.left != null) {
+                        stackRight.add(n1.left);
+                    }
+                    if (n1.right != null) {
+                        stackRight.add(n1.right);
+                    }
+                }
+            }
+            else {
+                while (!stackRight.isEmpty()) {
+                    Node n2 = stackRight.pop();
+                    result.add(n2.data);
+                    if (n2.right != null) {
+                        stackLeft.add(n2.right);
+                    }
+                    if (n2.left != null) {
+                        stackLeft.add(n2.left);
+                    }
+                }
+            }
+        }
+    }
+
+    private void levelOrderSum(Node root) {
+        Queue<Pair> queue = new LinkedList<>();
+        Map<Integer, Integer> result = new TreeMap<>();
+
+        queue.add(new Pair(0, root));
+
+        while (!queue.isEmpty()) {
+            Pair pair = queue.poll();
+            if (!result.containsKey(pair.index)) {
+                result.put(pair.index, pair.node.data);
+            }
+            else {
+                result.put(pair.index, result.get(pair.index) + pair.node.data);
+            }
+            if (pair.node.left != null) {
+                queue.add(new Pair(pair.index + 1, pair.node.left));
+            }
+            if (pair.node.right != null) {
+                queue.add(new Pair(pair.index + 1, pair.node.right));
+            }
+        }
+        System.out.println("Level Order sum : " + result);
+
+    }
+
+    private void verticalOrderPrint(Node root) {
+
+        Map<Integer, List<Integer>> reference = new TreeMap<>();
+        Queue<Pair> queue = new LinkedList<>();
+
+        queue.add(new Pair(0, root));
+
+        while (!queue.isEmpty()) {
+            Pair pair = queue.poll();
+            if (!reference.containsKey(pair.index)) {
+                List<Integer> data = new ArrayList<>();
+                data.add(pair.node.data);
+                reference.put(pair.index, data);
+            }
+            else {
+                List<Integer> data = reference.get(pair.index);
+                data.add(pair.node.data);
+                reference.put(pair.index, data);
+            }
+
+            if (pair.node.left != null) {
+                queue.add(new Pair(pair.index - 1, pair.node.left));
+            }
+            if (pair.node.right != null) {
+                queue.add(new Pair(pair.index + 1, pair.node.right));
+            }
+        }
+        System.out.println(reference);
+    }
+
+    private void boundaryView(Node root) {
+        Set<Integer> result = new HashSet<>();
+
+        // left view
+        leftBoundaryView(root, result, 0);
+
+        // right view
+        rightBoundaryView(root, result, 0);
+
+        // leaf nodes
+        leafNodes(root, result);
+
+        //print result
+        System.out.println(result);
+
+    }
+
+    private void leafNodes(Node root, Set<Integer> result) {
+
+        if (root != null && root.right == null && root.left == null) {
+            result.add(root.data);
+        }
+        if (root.left != null) {
+            leafNodes(root.left, result);
+        }
+        if (root.right != null) {
+            leafNodes(root.right, result);
+        }
+
+    }
+
+    private void rightBoundaryView(Node root, Set<Integer> result, int index) {
+        visitedNodes1 = new ArrayList<>();
+        Queue<Pair> queue = new LinkedList<>();
+
+        queue.add(new Pair(index, root));
+        visitedNodes1.add(0);
+
+        while (!queue.isEmpty()) {
+            Pair pair = queue.poll();
+
+            if (!visitedNodes1.contains(pair.index)) {
+                result.add(pair.node.data);
+                visitedNodes1.add(pair.index);
+            }
+
+            if (pair.node.right != null) {
+                queue.add(new Pair(pair.index + 1, pair.node.right));
+            }
+            if (pair.node.left != null) {
+                queue.add(new Pair(pair.index + 1, pair.node.left));
+            }
+        }
+
+
+    }
+
+    private void leftBoundaryView(Node root, Set<Integer> result, int level) {
+        if (root != null && !visitedNodes1.contains(level)) {
+            result.add(root.data);
+            visitedNodes1.add(level);
+        }
+        if (root.left != null) {
+            leftBoundaryView(root.left, result, level + 1);
+        }
+        if (root.right != null) {
+            leftBoundaryView(root.right, result, level + 1);
+        }
+    }
+
+
+    private void topView(Node root, int index) {
+        Map<Integer, Integer> reference = new TreeMap<>();
+
+        if (root != null) {
+
+            Queue<Pair> queue = new LinkedList<>();
+            queue.add(new Pair(index, root));
+
+            while (!queue.isEmpty()) {
+                Pair pair = queue.poll();
+                updateReferenceMap(pair, reference);
+                if (pair.node.left != null) {
+                    queue.add(new Pair(pair.index - 1, pair.node.left));
+                }
+                if (pair.node.right != null) {
+                    queue.add(new Pair(pair.index + 1, pair.node.right));
+                }
+            }
+
+            System.out.println(reference);
+            for (Map.Entry entry : reference.entrySet()) {
+                System.out.print(entry.getValue() + " ");
+            }
+        }
+    }
+
+    private void updateReferenceMap(Pair pair, Map<Integer, Integer> reference) {
+
+        // Remove if condition for bottom view
+        if (!reference.containsKey(pair.index)) {
+            reference.put(pair.index, pair.node.data);
+        }
+    }
+
+    class Pair {
+        Integer index;
+        Node node;
+
+        Pair(Integer index, Node node) {
+            this.index = index;
+            this.node = node;
+        }
+    }
+
+    private Integer getLevel(Node root, int target, int currentLevel, Integer result) {
+        if (root == null) {
+            return null;
+        }
+        if (root.data == target) {
+            result = currentLevel;
+            return result;
+        }
+        Integer level = getLevel(root.left, target, currentLevel + 1, result);
+        if (level == null) {
+            level = getLevel(root.right, target, currentLevel + 1, result);
+        }
+        return level;
+    }
+
+    private void identicalBinaryTeesRecursive(Node root, Node root1) {
+
+        if ((root != null && root1 == null) || (root == null && root1 != null)) {
+            System.out.println("Non identical");
+        }
+
+        if (root.data != root1.data) {
+            System.out.println("Non identical");
+        }
+
+        if (root.left != null && root1.right != null) {
+            identicalBinaryTeesRecursive(root.left, root1.left);
+        }
+        if (root.left != null && root1.right != null) {
+            identicalBinaryTeesRecursive(root.right, root1.right);
+        }
+    }
+
+    private void identicalBinaryTees(Node one, Node two) {
+
+        Node three = new Node(two);
+        boolean isIdentical = true;
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(one);
+
+        Queue<Node> queue2 = new LinkedList<>();
+        queue2.add(three);
+
+        while (!queue.isEmpty() && !queue2.isEmpty() && isIdentical) {
+            Node top1 = queue.poll();
+            if (top1.left != null) {
+                queue.add(top1.left);
+            }
+            if (top1.right != null) {
+                queue.add(top1.right);
+            }
+
+            Node top2 = queue2.poll();
+            if (top2.left != null) {
+                queue2.add(top2.left);
+            }
+            if (top2.right != null) {
+                queue2.add(top2.right);
+            }
+            if (top1.data != top2.data) {
+                isIdentical = false;
+            }
+        }
+
+        if (!queue.isEmpty() || !queue2.isEmpty()) {
+            System.out.println("Are trees identical false");
+        }
+        System.out.println("Are trees identical" + isIdentical);
+    }
+
+    private boolean mirrorImageOfGivenBinaryTreeProve(Node leftRoot, Node rightRoot) {
+
+        if ((leftRoot == null && rightRoot == null)) {
+            return true;
+        }
+
+        else if (leftRoot == null || rightRoot == null) {
+            return false;
+        }
+
+        else if (leftRoot.data != rightRoot.data) {
+            return false;
+        }
+
+        return mirrorImageOfGivenBinaryTreeProve(leftRoot.left, rightRoot.right) && mirrorImageOfGivenBinaryTreeProve(leftRoot.right, rightRoot.left);
+    }
+
+    private void inOrderTraversalWithOutRecursion(Node root) {
+//        Stack<Node> inOrder = new Stack<>();
+//        Node currentNode = root;
+//        inOrder.push(currentNode);
+//        addLeftElements(inOrder, currentNode);
+//        while (inOrder.size() > 0) {
+//            Node node = inOrder.pop();
+//            System.out.println(node.data);
+//            while (node.right != null) {
+//                addLeftElements(inOrder, currentNode);
+//            }
+//        }
+    }
+
+    private void addLeftElements(Stack<Node> inOrder, Node currentNode) {
+        while (currentNode.left != null) {
+            currentNode = currentNode.left;
+            inOrder.push(currentNode.left);
+        }
+    }
+
+    private void levelOrderTraversalQueue(Node root) {
+        Queue<Node> levelQueue = new LinkedList<>();
+        levelQueue.add(root);
+
+        while (!levelQueue.isEmpty()) {
+            Node currentNode = levelQueue.poll();
+            System.out.print(currentNode.data + "-");
+            if (currentNode.left != null) {
+                levelQueue.add(currentNode.left);
+            }
+            if (currentNode.right != null) {
+                levelQueue.add(currentNode.right);
+            }
+        }
+    }
+
+    private void levelOrderTraversalRecursion(Node root) {
+        int noOfLevels = heightOfTree1(root) + 1;
+
+        for (int i = 1; i <= noOfLevels; i++) {
+            System.out.println();
+            elementsAtGivenLevel(root, i);
+        }
+    }
+
+    private void elementsAtGivenLevel(Node root, int givenLevel) {
+
+        if (root == null) {
+            return;
+        }
+        else if (givenLevel == 1) {
+            System.out.print(root.data + "-");
+        }
+
+        elementsAtGivenLevel(root.left, givenLevel - 1);
+        elementsAtGivenLevel(root.right, givenLevel - 1);
+    }
+
+    private int differenceBetweenOddLevelAndEvenLevel(Node root) {
+        if (root == null) {
+            return 0;
+        }
+        return root.data - differenceBetweenOddLevelAndEvenLevel(root.left) - differenceBetweenOddLevelAndEvenLevel(root.right);
+    }
+
+    private int sumOfNodes(Node root) {
+        if (root == null) {
+            return 0;
+        }
+        return sumOfNodes(root.left) + root.data + sumOfNodes(root.right);
+    }
+
+    private int numberOfNodes(Node root) {
+        if (root == null) {
+            return 0;
+        }
+        return numberOfNodes(root.right) + numberOfNodes(root.left) + 1;
+    }
+
+    private void leftView(Node root) {
+        getLeftView(root, 1);
+    }
+
+    private void getLeftView(Node root, int currentLevel) {
+        if (!visitedNodes.contains(currentLevel)) {
+            System.out.print(root.data + " ");
+            visitedNodes.add(currentLevel);
+        }
+        if (root.left != null) {
+            getLeftView(root.left, currentLevel + 1);
+        }
+        if (root.right != null) {
+            getLeftView(root.right, currentLevel + 1);
+        }
+    }
+
+    private void rightView(Node root) {
+        getRightView(root, 1);
+    }
+
+    private void getRightView(Node root, int level) {
+
+        if (level >= maxVisitedLevel) {
+            maxVisitedLevel++;
+            System.out.print(root.data + " ");
+        }
+
+        if (root.right != null) {
+            getRightView(root.right, level + 1);
+        }
+        if (root.left != null) {
+            getRightView(root.left, level + 1);
+        }
+    }
+
+    private void givenLevel(Node root, int level, int currentLevel) {
+        if (root == null) {
+            return;
+        }
+        else if (level == 0) {
+            System.out.println(root.data);
+        }
+        else if (level == currentLevel) {
+            System.out.println(root.data);
+        }
+        givenLevel(root.left, level, currentLevel + 1);
+        givenLevel(root.right, level, currentLevel + 1);
+    }
+
+    private int numberOfLeafNodes(Node root) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.left == null && root.right == null) {
+            return 1;
+        }
+        return numberOfLeafNodes(root.left) + numberOfLeafNodes(root.right);
+    }
+
+    private int nmberOfNodes(Node root) {
+        if (root == null) {
+            return 0;
+        }
+        return 1 + nmberOfNodes(root.right) + nmberOfNodes(root.left);
+    }
+
+    private boolean commonAncestor(Node root, int element1, int element2, Node cmNode) {
+        if (root == null || cmNode != null) {
+            return false;
+        }
+        if (root.data == element1 || root.data == element2) {
+            return true;
+        }
+
+        int leftPresence = commonAncestor(root.left, element1, element2, cmNode) ? 1 : 0;
+        int rightPresence = commonAncestor(root.right, element1, element2, cmNode) ? 1 : 0;
+        int isRootMatched = (root.data == element1 || root.data == element2) ? 1 : 0;
+
+        if (leftPresence + rightPresence + isRootMatched >= 2) {
+            cmNode = root;
+        }
+        return (leftPresence + rightPresence + isRootMatched > 0);
+    }
+
+    private boolean findPath2(Node root, int ele1, int ele2) {
+
+
+        boolean rightPresence = findPath2(root.right, ele1, ele2);
+        boolean leftPresence = findPath2(root.left, ele1, ele2);
+
+
+        return false;
+    }
+
+    private int findPath(Node root) {
+        List<Integer> path = new ArrayList<>();
+        int element = 15;
+
+        List<Integer> path2 = new ArrayList<>();
+        int element2 = 12;
+
+        getPath(root, path, element);
+        getPath(root, path2, element2);
+        for (int i = 0; i < path.size() && i < path2.size(); i++) {
+            if (path.get(i) != path2.get(i)) {
+                return path.get(i - 1);
+            }
+        }
+        return -1;
+    }
+
+    private void getPath(Node root, List<Integer> path, int element) {
+        if (root == null) {
+            return;
+        }
+        path.add(root.data);
+        if (!isPresent(path, element)) {
+            getPath(root.left, path, element);
+        }
+        if (!isPresent(path, element)) {
+            getPath(root.right, path, element);
+        }
+        if (!isPresent(path, element)) {
+            path.remove(path.size() - 1);
+        }
+    }
+
+    private boolean isPresent(List<Integer> path, int element) {
+        for (Integer p : path) {
+            if (p == element) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private BalancedPair isBalanced(Node root) {
+        if (root == null) {
+            return new BalancedPair(-1, true);
+        }
+        BalancedPair leftBalancePair = isBalanced(root.left);
+        BalancedPair rightBalancePair = isBalanced(root.right);
+        if (leftBalancePair.isBalanced && rightBalancePair.isBalanced) {
+            return new BalancedPair(Math.max(leftBalancePair.height, rightBalancePair.height) + 1, Math.abs(leftBalancePair.height - rightBalancePair.height) <= 1);
+        }
+        else {
+            return new BalancedPair(Math.max(leftBalancePair.height, rightBalancePair.height) + 1, false);
+        }
+    }
+
+
+    private void diameterOfTree(Node root) {
+        int diameter = heightOfTree1(root.left) + heightOfTree1(root.right) + 1;
+        System.out.print(diameter);
+    }
+
+    private int heightOfTree1(Node root) {
+        if (root == null) {
+            return -1;
+        }
+        return Math.max(heightOfTree1(root.left), heightOfTree1(root.right)) + 1;
+    }
+
+
+//    private int heightOfTree(Node root) {
+//        if (root == null) {
+//            return 0;
+//        }
+//        int leftHeight = 1 + heightOfTree(root.left);
+//        int rightHeight = 1 + heightOfTree(root.right);
+//
+//        return leftHeight >= rightHeight ? leftHeight : rightHeight;
+//    }
+
+    private void levelOrderTraversal(Node root) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            Node node = queue.poll();
+            System.out.print(node.data + "-");
+            if (node.left != null) {
+                queue.offer(node.left);
+            }
+            if (node.right != null) {
+                queue.offer(node.right);
+            }
+        }
+    }
+
+    private void preOrderTraversal(Node root) {
+        if (root == null) {
+            return;
+        }
+        System.out.print(root.data + "-");
+        preOrderTraversal(root.left);
+        preOrderTraversal(root.right);
+    }
+
+    private void postOrderTraversal(Node root) {
+        if (root == null) {
+            return;
+        }
+        postOrderTraversal(root.left);
+        postOrderTraversal(root.right);
+        System.out.print(root.data + "-");
+    }
+
+    private void inOrderTraversal(Node root) {
+        if (root == null) {
+            return;
+        }
+        inOrderTraversal(root.left);
+        System.out.print(root.data + "-");
+        preOrderTraversal(root.right);
+    }
+
+
+    private Node construct() {
+
+        Node leaf211 = new Node(16, null, null);
+        Node leaf212 = new Node(17, null, null);
+
+        Node leaf1 = new Node(10, null, null);
+        Node leaf2 = new Node(11, leaf211, leaf212);
+        Node leaf3 = new Node(12, null, null);
+
+        Node leaf411 = new Node(15, null, null);
+        Node leaf41 = new Node(14, leaf411, null);
+
+        Node leaf4 = new Node(13, leaf41, null);
+
+
+        Node c1 = new Node(9, leaf1, leaf2);
+        Node c2 = new Node(8, leaf3, leaf4);
+
+        Node root = new Node(7, c1, c2);
+
+        return root;
+    }
+
+    private Node constructImage() {
+
+        Node leaf211 = new Node(16, null, null);
+        Node leaf212 = new Node(17, null, null);
+
+        Node leaf1 = new Node(10, null, null);
+        Node leaf2 = new Node(11, leaf212, leaf211);
+        Node leaf3 = new Node(12, null, null);
+
+        Node leaf411 = new Node(15, null, null);
+        Node leaf41 = new Node(14, null, leaf411);
+
+        Node leaf4 = new Node(13, null, leaf41);
+
+
+        Node c1 = new Node(9, leaf2, leaf1);
+        Node c2 = new Node(8, leaf4, leaf3);
+
+
+        Node root = new Node(7, c2, c1);
+
+        return root;
+    }
+
+
+    class Node {
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data, Node left, Node right) {
+            this.data = data;
+            this.left = left;
+            this.right = right;
+        }
+
+        Node(Node node) {
+            this.data = node.data;
+            this.left = node.left;
+            this.right = node.right;
+        }
+    }
+
+    class BalancedPair {
+        int height;
+        boolean isBalanced;
+
+        BalancedPair(int height, boolean isBalanced) {
+            this.height = height;
+            this.isBalanced = isBalanced;
+        }
+    }
+}
