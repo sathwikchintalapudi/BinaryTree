@@ -1,0 +1,101 @@
+package com.example.demo;
+
+public class BinaryTreeTwo {
+
+    public static void main(String[] args) {
+
+        BinaryTreeTwo binaryTree = new BinaryTreeTwo();
+        Node root = binaryTree.construct();
+        int[] preOrder = {2, 4, 7, 3, 8};
+        int[] inOrder = {7, 4, 3, 2, 8};
+
+
+        binaryTree.deriveConstruction(preOrder, inOrder, 0, preOrder.length - 1);
+
+    }
+
+    private Node deriveConstruction(int[] preOrder, int[] inOrder, int startIndex, int endIndex) {
+        int preOrderIndex = 0;
+
+        // Need to check this rule
+        if (startIndex < endIndex) {
+            return null;
+        }
+
+        Node root = new Node(preOrder[preOrderIndex++], null, null);
+
+        if (startIndex == endIndex) {
+            return root;
+        }
+
+        int inOrderIndex = getInorderIndex(root.data, inOrder);
+
+        root.left = deriveConstruction(preOrder, inOrder, startIndex, inOrderIndex - 1);
+        root.right = deriveConstruction(preOrder, inOrder, inOrderIndex + 1, endIndex);
+
+        return root;
+    }
+
+    private int getInorderIndex(int data, int[] inOrder) {
+        for (int i = 0; i < inOrder.length; i++) {
+            if (inOrder[i] == data) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+    private Node construct() {
+
+        Node leaf211 = new BinaryTreeTwo.Node(16, null, null);
+        Node leaf212 = new BinaryTreeTwo.Node(17, null, null);
+
+        Node leaf1 = new BinaryTreeTwo.Node(10, null, null);
+        Node leaf2 = new BinaryTreeTwo.Node(11, leaf211, leaf212);
+        Node leaf3 = new BinaryTreeTwo.Node(12, null, null);
+
+        Node leaf411 = new BinaryTreeTwo.Node(15, null, null);
+        BinaryTreeTwo.Node leaf41 = new BinaryTreeTwo.Node(14, leaf411, null);
+
+        BinaryTreeTwo.Node leaf4 = new BinaryTreeTwo.Node(13, leaf41, null);
+
+
+        BinaryTreeTwo.Node c1 = new BinaryTreeTwo.Node(9, leaf1, leaf2);
+        BinaryTreeTwo.Node c2 = new BinaryTreeTwo.Node(8, leaf3, leaf4);
+
+        BinaryTreeTwo.Node root = new BinaryTreeTwo.Node(7, c1, c2);
+
+        return root;
+    }
+
+
+    class Node {
+        int data;
+        BinaryTreeTwo.Node left;
+        BinaryTreeTwo.Node right;
+
+        Node(int data, BinaryTreeTwo.Node left, BinaryTreeTwo.Node right) {
+            this.data = data;
+            this.left = left;
+            this.right = right;
+        }
+
+        Node(BinaryTreeTwo.Node node) {
+            this.data = node.data;
+            this.left = node.left;
+            this.right = node.right;
+        }
+    }
+
+
+    class Pair {
+        Integer index;
+        BinaryTreeTwo.Node node;
+
+        Pair(Integer index, BinaryTreeTwo.Node node) {
+            this.index = index;
+            this.node = node;
+        }
+    }
+}
